@@ -1,7 +1,13 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+}
+
 $username = $_SESSION['username'];
+
+
 
 include("connection.php");
 include("post_object.php");
