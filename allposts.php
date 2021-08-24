@@ -29,34 +29,6 @@ if ($result) {
     }
 }
 
-// search database and update likes and tags of each post
-$query = "select * from likes";
-$result = mysqli_query($dbc, $query);
-
-if ($result) {
-    while ($row = mysqli_fetch_array($result)) {
-        for ($i = 0; $i < count($posts); $i++) {
-            if ($row['post_id'] == $posts[$i]->post_id) {
-                $posts[$i]->likes++;
-                break;
-            }
-        }
-    }
-}
-
-$query = "select * from tags";
-$result = mysqli_query($dbc, $query);
-
-if ($result) {
-    while ($row = mysqli_fetch_array($result)) {
-        for ($i = 0; $i < count($posts); $i++) {
-            if ($row['post_id'] == $posts[$i]->post_id) {
-                $posts[$i]->tags[] = $row['tag_name'];
-            }
-        }
-    }
-}
-
 // PAGINATION
 // 1. set limit, query for first n-limit posts
 $limit = 5;
@@ -91,17 +63,31 @@ $totalPages = ceil($totalPosts / $limit);
 $previous = $page - 1;
 $next = $page + 1;
 
-// check if at start or end of page number
-function checkStart()
-{
-    if ($GLOBALS('previous') == 1) {
-        return "disabled";
+// search database and update likes and tags of each post
+$query = "select * from likes";
+$result = mysqli_query($dbc, $query);
+
+if ($result) {
+    while ($row = mysqli_fetch_array($result)) {
+        for ($i = 0; $i < count($displayedPosts); $i++) {
+            if ($row['post_id'] == $displayedPosts[$i]->post_id) {
+                $displayedPosts[$i]->likes++;
+                break;
+            }
+        }
     }
 }
-function checkEnd()
-{
-    if ($GLOBALS('next') == $GLOBALS('totalPages')) {
-        return "disabled";
+
+$query = "select * from tags";
+$result = mysqli_query($dbc, $query);
+
+if ($result) {
+    while ($row = mysqli_fetch_array($result)) {
+        for ($i = 0; $i < count($displayedPosts); $i++) {
+            if ($row['post_id'] == $displayedPosts[$i]->post_id) {
+                $displayedPosts[$i]->tags[] = $row['tag_name'];
+            }
+        }
     }
 }
 
